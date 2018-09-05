@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 from httper import HTTP
+from flask import current_app
 
 
 class YuShuBook:
@@ -14,7 +15,11 @@ class YuShuBook:
         return result
 
     @classmethod
-    def search_by_keyword(cls, keyword):
-        url = cls.keyword_url.format(keyword)
+    def search_by_keyword(cls, keyword, page=1):
+        url = cls.keyword_url.format(keyword, current_app.config['PRE_PAGE'], cls.calc_start(page))
         result = HTTP.get(url)
         return result
+
+    @staticmethod
+    def calc_start(page):
+        return (page - 1) * current_app.config['PRE_PAGE']
