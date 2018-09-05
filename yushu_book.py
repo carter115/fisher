@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-from http import HTTP
+from httper import HTTP
 
 
 class YuShuBook:
