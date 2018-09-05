@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column,Integer,String
 
 db = SQLAlchemy()
+# db = SQLAlchemy(app)
 
 class Book(db.Model):
     """
