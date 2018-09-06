@@ -3,12 +3,12 @@
 
 class BookViewModel:
     def __init__(self, book):
-        self.title = book['title'],
-        self.publisher = book['publisher'],
-        self.pages = book['pages'] or '',
-        self.author = '、'.join(book['author']),
-        self.price = book['price'],
-        self.summary = book['summary'] or '',
+        self.title = book['title']
+        self.publisher = book['publisher']
+        self.pages = book['pages'] or ''
+        self.author = '、'.join(book['author'])
+        self.price = book['price']
+        self.summary = book['summary'] or ''
         self.image = book['image']
 
 
