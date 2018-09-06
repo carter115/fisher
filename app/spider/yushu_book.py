@@ -26,7 +26,9 @@ class YuShuBook:
             self.books.append(data)
 
     def search_by_keyword(self, keyword, page=1):
-        url = self.keyword_url.format(keyword, current_app.config['PRE_PAGE'], self.calc_start(page))
+        size = current_app.config['PRE_PAGE']
+        url = self.keyword_url.format(keyword, size, (page - 1) * size)
+        # url = self.keyword_url.format(keyword, current_app.config['PRE_PAGE'], self.calc_start(page))
         result = HTTP.get(url)
         self.__fill_collection(result)
 
@@ -34,5 +36,5 @@ class YuShuBook:
         self.total = data['total']
         self.books = data['books']
 
-    def calc_start(page):
-        return (page - 1) * current_app.config['PRE_PAGE']
+    # def calc_start(self, page):
+    #     return (page - 1) * current_app.config['PRE_PAGE']
