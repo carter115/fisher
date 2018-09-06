@@ -13,7 +13,6 @@ from . import web
 
 @web.route('/book/search', methods=['GET', 'POST'])
 def search():
-    print('start search ...')
     """
     q: 关键字 或者 isbn
     page:
