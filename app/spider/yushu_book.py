@@ -5,20 +5,34 @@ from flask import current_app
 
 
 class YuShuBook:
+    # 描述特征(类变量、实例变量)
+    # 行为(方法)
+    # 面向过程
     isbn_url = 'http://t.yushu.im/v2/book/isbn/{}'
     keyword_url = 'http://t.yushu.im/v2/book/search?q={}&count={}&start={}'
 
-    @classmethod
-    def search_by_isbn(cls, isbn):
-        url = cls.isbn_url.format(isbn)
-        result = HTTP.get(url)
-        return result
+    def __init__(self):
+        self.total = 0
+        self.books = []
 
-    @classmethod
-    def search_by_keyword(cls, keyword, page=1):
-        url = cls.keyword_url.format(keyword, current_app.config['PRE_PAGE'], cls.calc_start(page))
+    def search_by_isbn(self, isbn):
+        url = self.isbn_url.format(isbn)
         result = HTTP.get(url)
-        return result
+        self.__fill_single(result)
+
+    def __fill_single(self, data):
+        if data:
+            self.total = 1
+            self.books.append(data)
+
+    def search_by_keyword(self, keyword, page=1):
+        url = self.keyword_url.format(keyword, current_app.config['PRE_PAGE'], cls.calc_start(page))
+        result = HTTP.get(url)
+        self.__fill_collection(result)
+
+    def __fill_collection(self, data):
+        self.total = data['total']
+        self.books = data['books']
 
     @staticmethod
     def calc_start(page):
