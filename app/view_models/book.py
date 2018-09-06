@@ -3,6 +3,7 @@
 
 class BookViewModel:
     def __init__(self, book):
+        self.isbn = book['isbn']
         self.title = book['title']
         self.publisher = book['publisher']
         self.pages = book['pages'] or ''
