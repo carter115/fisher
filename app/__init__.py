@@ -6,6 +6,7 @@ from app.models.book import db
 
 def create_app():
     app = Flask(__name__)
+    # app = Flask(__name__, static_url_path='', static_folder='')
     app.config.from_object('app.setting')
     app.config.from_object('app.secure')
 
