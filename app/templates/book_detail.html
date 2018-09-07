@@ -105,7 +105,7 @@
             </div>
         {% endfor %}
     {% endif %}
-    {% if wishes.total != 0 and has_in_gifts %}
+    {% if wishes.total != 0 and not has_in_wishes %}
         <div style="margin-top:30px;" class="row">
             <div class="col-md-3"><span class="description-title">向他们赠送此书</span></div>
         </div>
