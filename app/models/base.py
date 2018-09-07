@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy, BaseQuery
 from sqlalchemy import Column, Integer, SmallInteger
 from contextlib import contextmanager
 from datetime import datetime
@@ -17,7 +17,15 @@ class SQLAlchemy(_SQLAlchemy):
             raise e
 
 
-db = SQLAlchemy()
+class Query(BaseQuery):
+    # 重写filter_by函数，查询条件默认status=1
+    def filter_by(self, **kwargs):
+        if 'status' not in kwargs.keys():
+            kwargs['status'] = 1
+        return super(Query, self).filter_by(**kwargs)
+
+
+db = SQLAlchemy(query_class=Query)
 
 
 class Base(db.Model):
