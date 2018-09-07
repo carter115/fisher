@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 from flask_login import UserMixin
+from app import login_manager
 
 from sqlalchemy import Column, Integer, String, Boolean, Float
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -8,7 +9,7 @@ from app.models.base import db, Base
 
 
 class User(Base, UserMixin):
-    id = Column(Integer, primary_key=True, )
+    id = Column(Integer, primary_key=True)
     nickname = Column(String(24), nullable=False)
     phone_number = Column(String(18), unique=True)
     email = Column(String(50), unique=True, nullable=False)
@@ -33,3 +34,8 @@ class User(Base, UserMixin):
 
     def get_id(self):
         return self.id
+
+
+@login_manager.user_loader
+def get_user(uid):
+    return User.query.get(int(uid))
