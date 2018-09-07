@@ -1,6 +1,6 @@
-from flask import request, render_template
-
-from app.forms.auth import RegisterForm
+from flask import request, render_template, redirect, url_for, flash
+from flask_login import login_user
+from app.forms.auth import RegisterForm, LoginForm
 from app.models.user import User, db
 from . import web
 
@@ -15,12 +15,22 @@ def register():
         user.set_attrs(form.data)
         db.session.add(user)
         db.session.commit()
+        return redirect(url_for('web.login'))
     return render_template('auth/register.html', form=form)
 
 
 @web.route('/login', methods=['GET', 'POST'])
 def login():
-    pass
+    form = LoginForm(request.form)
+    print(form.data)
+    if request.method == 'POST' and form.validate():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=True)
+            return redirect(url_for('web.index'))
+        else:
+            flash('帐号不存在或密码错误')
+    return render_template('auth/login.html', form=form)
 
 
 @web.route('/reset/password', methods=['GET', 'POST'])

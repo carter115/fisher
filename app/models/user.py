@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
+from flask_login import UserMixin
+
 from sqlalchemy import Column, Integer, String, Boolean, Float
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models.base import db, Base
 
 
-class User(Base):
+class User(Base, UserMixin):
     id = Column(Integer, primary_key=True, )
     nickname = Column(String(24), nullable=False)
     phone_number = Column(String(18), unique=True)
@@ -25,3 +27,9 @@ class User(Base):
     @password.setter
     def password(self, raw):
         self._password = generate_password_hash(raw)
+
+    def check_password(self, raw):
+        return check_password_hash(self._password, raw)
+
+    def get_id(self):
+        return self.id

@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 from flask import Flask
+from flask_login import LoginManager
 from app.models.book import db
+
+login_manager = LoginManager()
 
 
 def create_app():
@@ -14,8 +17,8 @@ def create_app():
 
     db.init_app(app)
     db.create_all(app=app)
-    # with app.app_context():
-    #     db.create_all()
+
+    login_manager.init_app(app)
     return app
 
 
