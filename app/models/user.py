@@ -5,7 +5,12 @@ from app import login_manager
 
 from sqlalchemy import Column, Integer, String, Boolean, Float
 from werkzeug.security import generate_password_hash, check_password_hash
+
+from app.libs.helper import is_isbn_or_key
 from app.models.base import db, Base
+from app.models.gift import Gift
+from app.models.wish import Wish
+from app.spider.yushu_book import YuShuBook
 
 
 class User(Base, UserMixin):
@@ -34,6 +39,27 @@ class User(Base, UserMixin):
 
     def get_id(self):
         return self.id
+
+    def can_save_to_list(self, isbn):
+        # isbn,鱼书,礼物清单，心愿
+        if is_isbn_or_key(isbn) != 'isbn':
+            return False
+        yushu_book = YuShuBook()
+        yushu_book.search_by_isbn(isbn)
+        if not yushu_book.first:
+            return False
+        # 不允许一个用户同时赠送多本相同的图书
+        # 一个用户不可能同时成为赠送者和索要者
+
+        # 既不在赠送清单，也不在心愿清单才能添加
+        gifting = Gift.query.filter_by(uid=self.id, launched=False,
+                                       isbn=isbn).first()
+        wishing = Wish.query.filter_by(uid=self.id, launched=False,
+                                       isbn=isbn).first()
+        if not gifting and not wishing:
+            return True
+        else:
+            return False
 
 
 @login_manager.user_loader

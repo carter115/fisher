@@ -1,4 +1,7 @@
-from flask_login import login_required
+from flask import flash
+from flask_login import login_required, current_user
+
+from app.models.gift import Gift, db
 from . import web
 
 __author__ = '七月'
@@ -11,8 +14,21 @@ def my_gifts():
 
 
 @web.route('/gifts/book/<isbn>')
+@login_required
 def save_to_gifts(isbn):
-    pass
+    if current_user.can_save_to_list(isbn):
+        # 事务 rollback
+        try:
+            gift = Gift()
+            gift.isbn = isbn
+            gift.uid = current_user.id
+            current_user.beans += current_user.config['BEANS_UPLOAD_ONE_BOOK']
+            db.session.add(gift)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+    else:
+        flash('这本书已添加至你的赠送清单或已存在于你的心愿清单，请不要重复添加')
 
 
 @web.route('/gifts/<gid>/redraw')
