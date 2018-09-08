@@ -1,5 +1,5 @@
 from flask import request, render_template, redirect, url_for, flash
-from flask_login import login_user
+from flask_login import login_user, logout_user
 from app.forms.auth import RegisterForm, LoginForm
 from app.models.user import User, db
 from . import web
@@ -53,4 +53,5 @@ def change_password():
 
 @web.route('/logout')
 def logout():
-    pass
+    logout_user()
+    return redirect(url_for('web.index'))
