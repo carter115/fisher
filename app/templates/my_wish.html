@@ -33,9 +33,9 @@
                         </a>
                     </div>
                     <div class="col-md-3 flex-vertical">
-                        {% if wish.wishes_count %}
+                        {% if wish.count %}
                             <a href="{{ url_for('web.book_detail', isbn=wish.book.isbn) }}">
-                                <span class="bg-info">{{ wish.wishes_count }}人赠送</span>
+                                <span class="bg-info">{{ wish.count }}人赠送</span>
                             </a>
                         {% endif %}
                     </div>
@@ -47,5 +47,5 @@
 {% endblock %}
 {% block scripts %}
     {{ super() }}
-    <script src="{{ url_for('static', filename="js/util.js") }}"></script>
+    <script src="{{ url_for('static', filename='js/util.js') }}"></script>
 {% endblock %}
