@@ -3,6 +3,7 @@
 from sqlalchemy import Column, Integer, SmallInteger, String, Boolean, ForeignKey, desc, func
 from sqlalchemy.orm import relationship
 
+from app.libs.enums import PendingStatus
 from .base import Base
 
 
@@ -38,4 +39,13 @@ class Drift(Base):
     # gift_id = Column(Integer, ForeignKey('gift.id'))
     # gift = relationship('Gift')
 
-    pending = Column('pending', SmallInteger, default=1)
+    _pending = Column('pending', SmallInteger, default=1)
+
+    # 数字类型、枚举类型的转换
+    @property
+    def pending(self):
+        return PendingStatus(self._pending)
+
+    @pending.setter
+    def pending(self, status):
+        self._pending = status.value

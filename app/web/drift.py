@@ -3,6 +3,7 @@ from flask import flash, redirect, request, render_template, url_for
 
 from app.forms.book import DriftForm
 from app.libs.email import send_mail
+from app.libs.enums import PendingStatus
 from app.models.drift import Drift
 from app.models.gift import Gift, db
 from app.view_models.book import BookViewModel
@@ -56,7 +57,10 @@ def reject_drift(did):
 
 @web.route('/drift/<int:did>/redraw')
 def redraw_drift(did):
-    pass
+    with db.auto_commit():
+        drift = Drift.filter(Drift.id == did).first_or_404()
+        drift.pending = PendingStatus.Redraw
+    return redirect(url_for('web.pending'))
 
 
 @web.route('/drift/<int:did>/mailed')
