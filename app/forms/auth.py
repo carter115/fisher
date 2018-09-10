@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 from wtforms import Form, IntegerField, StringField, PasswordField
-from wtforms.validators import ValidationError, DataRequired, Length, NumberRange, Email
+from wtforms.validators import ValidationError, DataRequired, Length, NumberRange, Email, EqualTo
 from app.models.user import User
 
 
@@ -27,3 +27,11 @@ class RegisterForm(LoginForm):
     def validate_nickname(self, field):
         if User.query.filter_by(nickname=field.data).first():
             raise ValidationError('昵称已存在')
+
+
+class ResetPasswordForm(Form):
+    password1 = PasswordField(
+        validators=[DataRequired(),
+                    Length(6, 32, message='密码长度至少需要6到32个字符之间'),
+                    EqualTo('password2', message='两次输入的密码不相同')])
+    password2 = PasswordField(validators=[DataRequired(), Length(6, 32)])
